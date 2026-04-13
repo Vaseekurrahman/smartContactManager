@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/user_base :: layout(~{::section})}">
+
+    <head></head>
+
+    <body>
+        <section>
+            <div class="card" style="background-color: rgb(255, 255, 255)">
+                <div class="card-body">
+                    <div th:if="${message}"
+                         th:class="'alert text-center ' + ${message.type}">
+                        
+                        <p th:text="${message.content}"></p>
+
+                    </div>
+                    <h1 class="text-center"> This is add Contact</h1>
+                    <div class="col-sm-8 offset-md-2">
+                        <form th:action="@{/user/process}" enctype="multipart/form-data" method="post" class="mt-2">
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-plus "></i>
+                                    </div>
+                                </div>
+                                <input type="text" name="name" placeholder="Enter the your name" class="form-control" required>
+                            </div>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                </div>
+                                <input type="text" name="secondName" placeholder="Enter the your secondName  " class="form-control" required>
+                            </div>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                </div>
+                                <input type="text" name="work" placeholder="Enter the your work" class="form-control" required>
+                            </div>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <input type="email" name="email" placeholder=" Email" class="form-control" required>
+                            </div>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </div>
+                                </div>
+                                <input type="number" name="phone" placeholder="Enter the your phone Number" class="form-control">
+                            </div>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                </div>
+                                <textarea id="mytextarea" cols="90" rows="10" name="description" placeholder="decsription"></textarea>
+                            </div>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa-regular fa-file-image"></i>
+                                    </div>
+                                </div>
+                                <input type="file" name="profileImage" placeholder="Enter the your img" class="form-control">
+                            </div>
+                            <div class="container text-center mt-3">
+                                <button class="btn btn-primary ">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    tinymce.init({
+                        selector: '#mytextarea',
+                        height: 300,
+                        license_key: 'gpl'   // ✅ ADD THIS LINE
+                    });
+                });
+            </script>
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,43 @@
+        <html xmlns:th="http://www.thymeleaf.org"  th:replace="~{base::layout(~{::section})}">
+            <head>
+                <title>this is home page</title>
+            </head>
+            <body>
+              <section class="banner">
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        
+        <div class="carousel-inner">
+
+            <div class="carousel-item active">
+                <img src="/images/imgslider2.jpg" class="d-block w-100" alt="...">
+            </div>
+
+            <div class="carousel-item">
+                <img src="/images/OIP.jpeg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                           <img src="/images/OIP (1).jpeg" class="d-block w-100" alt="...">
+                       </div>
+            <div class="carousel-caption d-flex flex-column text-dark justify-content-center align-items-center h-100">
+                     <h2 class="fw-bold ">Smart Contact Manager</h2>
+                     <p class="lead">Manage your contacts in a smarter way</p>
+                     <button class="btn btn-primary btn-lg">Get Started</button>
+                   </div>
+
+        </div>
+
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
+    </div>
+   
+</section>
+            </body>
+        </html>

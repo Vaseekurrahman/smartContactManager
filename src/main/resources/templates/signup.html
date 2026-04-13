@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+    <head>
+        <title>this is home page</title>
+    </head>
+
+    <body>
+        <section>
+            <div class=container>
+                <div class="row">
+                    <div class="col-md-6 offset-md-3 mb-4">
+                        <div class="my-card">
+                            <div th:if="${message}" th:class="'alert text-center ' + ${message.type}">
+                                <span th:text="${message.content}"></span>
+                            </div>
+                            <div class=" container text-center">
+                                <img class="" style="width: 80px;" th:src="@{images/regulatory.png}" >
+                            </div>
+                            <h1 class="text-center">Register Here!!</h1>
+                            <form th:action="@{/register}" method="post" th:object="${user}">
+                                <div class="form-group">
+                                    <label>Your Name</label>
+                                    <input type="text"
+                                        th:field="*{name}"
+                                        class="form-control"
+                                        th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                                    <div class="invalid-feedback"
+                                        th:if="${#fields.hasErrors('name')}"
+                                        th:errors="*{name}">
+                                    </div>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label>Email</label>
+                                    <input type="email" th:field="*{email}" class="form-control" placeholder="Enter here" />
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label>Password</label>
+                                    <input type="password" th:field="*{password}" class="form-control" placeholder="Enter here" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea th:field="*{about}" rows="5" class="form-control"></textarea>
+                                </div>
+                                <div class="form-check text-center">
+                                    <input type="checkbox" name="agreement" class="form-check-input" />
+                                    <label>Accept terms and condition</label>
+                                </div>
+                                <div class="container mt-2 text-center">
+                                    <button type="submit" class="btn bg-primary text-white">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+
+</html>

@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{user/user_base :: layout(~{::section})}">
+
+<head></head>
+
+<body>
+<section>
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Message -->
+            <div th:if="${message}"
+                 th:class="'alert text-center ' + ${message.type}">
+                <p th:text="${message.content}"></p>
+            </div>
+
+            <h1 class="text-center">Update Contact</h1>
+            <hr>
+
+            <div class="col-sm-8 offset-md-2">
+
+                <!-- ✅ FINAL FORM -->
+                <form th:action="@{'/user/update_details/' + ${contact.cId}}"
+                      method="post"
+                      enctype="multipart/form-data">
+                    <!-- ✅ Hidden ID -->
+                    <input type="hidden" name="cId" th:value="${contact.cId}" />
+
+                    <!-- Name -->
+                    <input  name="name"
+                           th:value="${contact.name}"
+                           class="form-control mt-2" required />
+
+                    <!-- Second Name -->
+                    <input type="text" name="secondName"
+                           th:value="${contact.secondName}"
+                           class="form-control mt-2" required />
+
+                    <!-- Work -->
+                    <input  name="work"
+                           th:value="${contact.work}"
+                           class="form-control mt-2" required />
+
+                    <!-- Email -->
+                    <input type="email" name="email"
+                           th:value="${contact.email}"
+                           class="form-control mt-2" required />
+
+                    <!-- Phone -->
+                    <input  name="phone"
+                           th:value="${contact.phone}"
+                           class="form-control mt-2" />
+
+                    <!-- Description -->
+                    <textarea name="description"
+                              th:text="${contact.description}"
+                              class="form-control mt-2"></textarea>
+
+                    <!-- Image Preview -->
+                    <div class="text-center mt-3">
+                        <img th:src="@{'/images/' + ${contact.image}}"
+                             style="width:100px;height:100px;" />
+                    </div>
+
+                    <!-- File Upload -->
+                    <input type="file" name="profileImage"
+                           class="form-control mt-2" />
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn btn-primary mt-3">
+                       save contact
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

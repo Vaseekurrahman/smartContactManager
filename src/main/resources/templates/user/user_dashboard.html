@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{user/user_base :: layout(~{::section})}">
+
+<head></head>
+
+<body >
+
+<section class="">
+    <h1>Welcome to user dashboard</h1>
+    <div class="container-fluid mt-4">
+
+        <!-- Welcome Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Welcome, <span th:text="${user.name}">User</span> 👋</h3>
+            <input type="text" class="form-control w-25" placeholder="🔍 Search contacts...">
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 text-center">
+                    <i class="fa fa-address-book fa-2x text-primary mb-2"></i>
+                    <h4 th:text="${totalContacts}">120</h4>
+                    <p>Total Contacts</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 text-center">
+                    <i class="fa fa-star fa-2x text-warning mb-2"></i>
+                    <h4>45</h4>
+                    <p>Favorites</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 text-center">
+                    <i class="fa fa-user-plus fa-2x text-success mb-2"></i>
+                    <h4>10</h4>
+                    <p>New Added</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 text-center">
+                    <i class="fa fa-trash fa-2x text-danger mb-2"></i>
+                    <h4>5</h4>
+                    <p>Deleted</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- QUICK ACTION BUTTONS -->
+        <div class="mt-4">
+            <a href="/user/add_contact" class="btn btn-primary me-2">
+                <i class="fa fa-plus"></i> Add Contact
+            </a>
+
+            <a href="/user/view_contact/0" class="btn btn-success">
+                <i class="fa fa-eye"></i> View All Contacts
+            </a>
+        </div>
+
+        <!-- RECENT CONTACTS TABLE -->
+        <div class="card mt-4 shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="mb-3">Recent Contacts</h5>
+
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Profile</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="c : ${contacts}">
+                            <td>
+                                <img src="/img/default.png" width="40" class="rounded-circle">
+                            </td>
+                            <td th:text="${c.name}">Rahul</td>
+                            <td th:text="${c.email}">rahul@gmail.com</td>
+                            <td th:text="${c.phone}">9876543210</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- DASHBOARD CONTENT END -->
+</section>
+
+</body>
+
+</html>

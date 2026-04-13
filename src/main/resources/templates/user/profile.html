@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{user/user_base :: layout(~{::section})}">
+
+    <head>
+    </head>
+
+    <body>
+        <section class="">
+            <div class="card mycard" style="width: 45%;">
+                <div class="card-body ">
+                    <div class="container text-center">
+                        <img src="/images/pngtree-man-avatar-image-for-profile-png-image_13001877.png"
+                             alt="profile" style="height: 100px; width: 100px; border-radius: 50%;"/>
+                        <h3 class="mt-3"><span th:text="${user.name}"></span></h3>
+                        <div> <span class="fs-4 fw-bold"> Email :</span> <span th:text="${user.email}"></span> </div>
+                        <div> <span class="fs-4 fw-bold">Image : </span><span th:text="${user.imageUrl}"></span></div>
+                        <div> <span class="fs-4 fw-bold">Enabled : </span><span th:text="${user.enabled}"></span></div>
+                        <div> <span class="fs-4 fw-bold">Role : </span><span th:utext="${user.role}"></span></div>
+                      
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+
+</html>

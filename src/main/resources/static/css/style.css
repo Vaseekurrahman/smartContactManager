@@ -1,0 +1,154 @@
+.primary{
+    background-color: #009688;
+}
+.banner{
+    height: 100vh;   /* Full screen height */
+    width: 100%;
+}
+
+.carousel,
+.carousel-inner,
+.carousel-item{
+    height: 100vh;
+}
+
+.carousel-item img{
+    height: 100vh;
+    width: 100%;
+    object-fit: cover;   /* Image stretch nahi hogi */
+}
+
+.my-card{
+    padding: 20px;
+    background: white;
+}
+
+/*sidebar*/
+
+@media only screen and (max-width:600px){
+
+    .sidebar{
+        display: none;
+        width: 80%;
+        height: 100vh;
+        position: fixed;
+        background:white;
+        padding-top: 20px;
+    }
+
+    .content{
+        margin-left: 0px;
+       
+    }
+}
+
+.sidebar{
+ width: 18%;
+ background-color:  #009688;
+ height: 100%;
+ position: fixed;
+ padding-top: 45px;
+ z-index: 999999999999999;
+ color: white;
+}
+
+.sidebar a{
+    display: block;
+    width: 100%;
+    padding: 10px 25px;
+    color: white;
+    text-decoration: none;
+    
+}
+.sidebar a:hover{
+    background: #e2e2e2;
+}
+
+.sidebar .divider{
+    height: .5px;
+    width: 100px;
+    background: #e2e2e2;
+    margin-top: 10px;
+}
+.content{
+  
+    margin-left: 20%;
+   
+}
+
+.sidebar .crossBtn{
+    position: absolute;
+    top: 0;
+    right: 35px;
+    font-size: 30px;
+    cursor: pointer;
+}
+.my_profile{
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+   
+}
+.mycard{
+  
+     margin:  auto;
+}
+.footer {
+    background: linear-gradient(135deg, #1e272e, #2f3640);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glass effect */
+.footer::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200%;
+    height: 200%;
+    background: rgba(255,255,255,0.05);
+    transform: rotate(25deg);
+}
+
+/* Links */
+.footer a {
+    color: #dcdde1;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.footer a:hover {
+    color: #00a8ff;
+    transform: translateX(5px);
+    transition: 0.3s;
+}
+
+/* Social icons */
+.footer i {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.footer i:hover {
+    color: #00a8ff;
+    transform: scale(1.2);
+}
+
+/* Bottom bar */
+.footer-bottom {
+    background: rgba(0,0,0,0.3);
+}
+/*
+search css*/
+.search-container {
+    position: relative;
+
+}
+.search-results {
+    position: absolute;
+
+}
