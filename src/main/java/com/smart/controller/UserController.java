@@ -62,6 +62,7 @@ public class UserController {
 		return "user/user_dashboard";
 	}
 
+
 	// Add Contact
 
 	@GetMapping("/add_contact")
@@ -88,6 +89,7 @@ public class UserController {
 
 	// showing particullar contact details
 
+
 	@RequestMapping("/{cId}/view_contact")
 	public String viewContactDetails(@PathVariable("cId") Integer cId, Model model, Principal principal) {
 
@@ -106,6 +108,7 @@ public class UserController {
 
 		return "user/contact_details";
 	}
+
 
 	// setting
 
@@ -166,6 +169,7 @@ public class UserController {
 
 			// Old data fetch
 			Contact oldContact = contactRepository.findById(cId).get();
+			System.out.println(oldContact);
 
 			// IMPORTANT (data loss fix)
 			contact.setcId(cId);
@@ -178,6 +182,7 @@ public class UserController {
 			} else {
 				contact.setImage(oldContact.getImage());
 			}
+
 
 			// Save updated contact
 			contactRepository.save(contact);
@@ -271,7 +276,7 @@ public class UserController {
 	// change password
 
 	@GetMapping("/change_password")
-	public String changePassword(@ModelAttribute Model model, User user, Principal principal) {
+	public String changePassword(Model model, @ModelAttribute User user, Principal principal) {
 		String name = principal.getName();
 
 		System.out.println(name);
