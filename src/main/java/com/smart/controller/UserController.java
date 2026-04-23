@@ -12,19 +12,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,269 +36,277 @@ public class UserController {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+
 	@Autowired
 	private ContactRepository contactRepository;
 
 	@Autowired
 	private UserRepository userRepository;
 
-	// User Dashboard
+	// ================= COMMON USER =================
+	@ModelAttribute
+	public void addUserToModel(Model model, Principal principal) {
+		if (principal != null) {
+			userRepository.findByEmail(principal.getName())
+					.ifPresent(user -> model.addAttribute("user", user));
+		}
+	}
 
+	// ================= DASHBOARD =================
 	@GetMapping("/user_dashboard")
 	public String dashboard(Model model, Principal principal) {
-		String userName = principal.getName();
-		System.out.println("USERNAME " + userName);
-		String email = principal.getName();
-		Optional<User> optionalUser = userRepository.findByEmail(email);
-		User user = optionalUser.get();
 
-		model.addAttribute("user", user);
+		User user = getLoggedUser(principal);
+
+		model.addAttribute("totalContacts", contactRepository.countByUser(user));
+
+		Pageable pageable = PageRequest.of(0, 5, Sort.by("date").descending());
+		Page<Contact> recentContacts = contactRepository.findContactsByUser(user.getId(), pageable);
+
+		model.addAttribute("contacts", recentContacts.getContent());
+
 		return "user/user_dashboard";
 	}
 
-
-	// Add Contact
-
+	// ================= ADD CONTACT PAGE =================
 	@GetMapping("/add_contact")
 	public String addcontact() {
 		return "user/add_contact";
 	}
 
-	// View Contacts
 
+	//profile page
+	@GetMapping("/profile")
+	public String profile() {
+		return "user/profile";
+	}
+//settings page
+	@GetMapping("/setting")
+	public String settings() {
+		return "user/setting";
+
+	}
+	// ================= VIEW CONTACT =================
 	@GetMapping("/view_contact/{page}")
-	public String contact(@PathVariable("page") Integer page, Model model, Principal principal) {
+	public String contact(@PathVariable Integer page, Model model, Principal principal) {
 
-		String userName = principal.getName();
-		User user = this.userRepository.findByEmail(userName).get();
+		User user = getLoggedUser(principal);
+
 		Pageable pageable = PageRequest.of(page, 5);
-
-		Page<Contact> contacts = this.contactRepository.findContactsByUser(user.getId(), pageable);
+		Page<Contact> contacts = contactRepository.findContactsByUser(user.getId(), pageable);
 
 		model.addAttribute("contacts", contacts);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalpages", contacts.getTotalPages());
+
 		return "user/view_contact";
 	}
 
-	// showing particullar contact details
+	// ================= VIEW SINGLE CONTACT =================
+	@GetMapping("/{cId}/view_contact")
+	public String viewContactDetails(@PathVariable Integer cId, Model model, Principal principal) {
 
+		User user = getLoggedUser(principal);
+		Contact contact = contactRepository.findById(cId)
+				.orElseThrow(() -> new RuntimeException("Contact not found"));
 
-	@RequestMapping("/{cId}/view_contact")
-	public String viewContactDetails(@PathVariable("cId") Integer cId, Model model, Principal principal) {
-
-		String username = principal.getName();
-		User user = userRepository.findByEmail(username).get();
-
-		Optional<Contact> contactOptional = contactRepository.findById(cId);
-
-		if (contactOptional.isPresent() && contactOptional.get().getUser().getId() == user.getId()) {
-
-			model.addAttribute("contact", contactOptional.get());
-
-		} else {
+		// ✅ FIXED (no .equals on int)
+		if (contact.getUser().getId() != user.getId()) {
 			model.addAttribute("contact", new Contact());
+		} else {
+			model.addAttribute("contact", contact);
 		}
 
 		return "user/contact_details";
 	}
 
-
-	// setting
-
-	@GetMapping("/setting")
-	public String setting() {
-		return "user/setting";
-	}
-
-	// profile
-
-	@GetMapping("/profile")
-	public String profile(Model model, Principal principal) {
-
-		String username = principal.getName();
-
-		Optional<User> optionalUser = this.userRepository.findByEmail(username);
-
-		model.addAttribute("user", optionalUser.get());
-
-		return "user/profile";
-	}
-
-	@GetMapping("/logout")
-	public String logout() {
-		return "login";
-	}
-
-	@GetMapping("/home")
-	public String home() {
-		return "user/home";
-	}
-
-	// ================= UPDATE FORM OPEN =================
-
-	@GetMapping("/update_details/{cId}")
-	public String showUpdateForm(@PathVariable("cId") Integer cId, Model model) {
-		Contact contact = contactRepository.findById(cId).get();
-		model.addAttribute("contact", contact);
-
-		return "user/update_details";
-	}
-
-	@GetMapping("/update_contact/{cId}")
-	public String showUpdateFormContact(@PathVariable("cId") Integer cId, Model model) {
-		Contact contact = contactRepository.findById(cId).get();
-		model.addAttribute("contact", contact);
-		return "user/update_contact";
-	}
-
-	// ================= UPDATE HANDLER =================
-
-	@PostMapping("/update_details/{cId}")
-	public String updateHandler(@ModelAttribute Contact contact,
-			@RequestParam(value = "profileImage", required = false) MultipartFile file,
-			@PathVariable("cId") Integer cId, RedirectAttributes redirectAttributes) {
-
-		try {
-
-			// Old data fetch
-			Contact oldContact = contactRepository.findById(cId).get();
-			System.out.println(oldContact);
-
-			// IMPORTANT (data loss fix)
-			contact.setcId(cId);
-			contact.setUser(oldContact.getUser());
-			contact.setDate(oldContact.getDate());
-
-			// Image handling
-			if (!file.isEmpty()) {
-				contact.setImage(file.getOriginalFilename());
-			} else {
-				contact.setImage(oldContact.getImage());
-			}
-
-
-			// Save updated contact
-			contactRepository.save(contact);
-
-			redirectAttributes.addFlashAttribute("message",
-					new Message("Contact Updated Successfully ✅", "alert-success"));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			redirectAttributes.addFlashAttribute("message", new Message("Something went wrong ❌", "alert-danger"));
-		}
-
-		return "redirect:/user/update_details/" + cId;
-	}
-
-	// delete the contact
-
+	// ================= DELETE =================
 	@Transactional
 	@GetMapping("/delete/{cId}")
-	public String deleteContact(@PathVariable("cId") Integer cId, Principal principal,
-			RedirectAttributes redirectAttributes) {
+	public String deleteContact(@PathVariable Integer cId, Principal principal,
+								RedirectAttributes redirectAttributes) {
 
-		Optional<Contact> contactOptional = contactRepository.findById(cId);
+		User user = getLoggedUser(principal);
 
-		if (contactOptional.isPresent()) {
-			Contact contact = contactOptional.get();
+		Contact contact = contactRepository.findById(cId).orElse(null);
 
-			// Optional: check ownership
-			if (contact.getUser().getEmail().equals(principal.getName())) {
-				contactRepository.delete(contact);
-				contactRepository.flush(); // DB me immediately reflect
-				redirectAttributes.addFlashAttribute("message",
-						new Message("Contact deleted successfully ✅", "alert-success"));
-			} else {
-				redirectAttributes.addFlashAttribute("message",
-						new Message("You cannot delete this contact ❌", "alert-danger"));
-			}
+		// ✅ FIXED
+		if (contact != null && contact.getUser().getId() == user.getId()) {
+
+			contactRepository.delete(contact);
+
+			redirectAttributes.addFlashAttribute("message",
+					new Message("Contact deleted successfully ✅", "alert-success"));
 
 		} else {
-			redirectAttributes.addFlashAttribute("message", new Message("Contact not found ❌", "alert-danger"));
+			redirectAttributes.addFlashAttribute("message",
+					new Message("Unauthorized or not found ❌", "alert-danger"));
 		}
 
 		return "redirect:/user/view_contact/0";
 	}
 
-	// Process the data
-
+	// ================= ADD CONTACT =================
 	@PostMapping("/process")
-	public String addContact(Model model, @ModelAttribute Contact contact,
-			@RequestParam("profileImage") MultipartFile file, Principal principal,
-			RedirectAttributes redirectAttributes) {
+	public String addContact(@ModelAttribute Contact contact,
+							 @RequestParam("profileImage") MultipartFile file,
+							 Principal principal,
+							 RedirectAttributes redirectAttributes) {
 
 		try {
-			String name = principal.getName();
-			User user = userRepository.findByEmail(name).get();
 
-			if (file.isEmpty()) {
-				contact.setImage("regulatory.png");
-			} else {
-				contact.setImage(file.getOriginalFilename());
-				File saveFile = new ClassPathResource("static/images").getFile();
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
+			User user = getLoggedUser(principal);
 
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING); // ✅ fixed
-			}
-
-			contact.setUser(user);
-
-			List<Contact> exist = this.contactRepository.findByEmail(contact.getEmail());
+			// Duplicate email check
+			List<Contact> exist = contactRepository.findByEmailAndUser(contact.getEmail(), user);
 
 			if (!exist.isEmpty()) {
-				redirectAttributes.addFlashAttribute("message", new Message("Email already exists ❌", "alert-danger"));
+				redirectAttributes.addFlashAttribute("message",
+						new Message("Email already exists ❌", "alert-danger"));
 				return "redirect:/user/add_contact";
 			}
 
+			// Image upload
+			String fileName = handleFileUpload(file);
+
+			contact.setImage(fileName);
+			contact.setUser(user);
 			contact.setDate(LocalDateTime.now());
+
 			contactRepository.save(contact);
 
 			redirectAttributes.addFlashAttribute("message",
 					new Message("Contact added successfully ✅", "alert-success"));
 
 		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("message", new Message("Something went wrong ❌", "alert-danger"));
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message",
+					new Message("Something went wrong ❌", "alert-danger"));
 		}
 
 		return "redirect:/user/add_contact";
 	}
 
-	// change password
+	// ================= EDIT CONTACT PAGE =================
+	@GetMapping("/update_details/{cId}")
+	public String editContact(@PathVariable Integer cId,
+							  Model model,
+							  Principal principal) {
 
+		User user = getLoggedUser(principal);
+
+		Contact contact = contactRepository.findById(cId)
+				.orElseThrow(() -> new RuntimeException("Contact not found"));
+
+		if (contact.getUser().getId() != user.getId()) {
+			throw new RuntimeException("Unauthorized");
+		}
+
+		model.addAttribute("contact", contact);
+
+		return "user/update_details";
+	}
+
+	// ================= UPDATE =================
+	@PostMapping("/update_details/{cId}")
+	public String updateHandler(@ModelAttribute Contact contact,
+								@RequestParam(value = "profileImage", required = false) MultipartFile file,
+								@PathVariable Integer cId,
+								Principal principal,
+								RedirectAttributes redirectAttributes) {
+
+		try {
+
+			User user = getLoggedUser(principal);
+
+			Contact oldContact = contactRepository.findById(cId)
+					.orElseThrow(() -> new RuntimeException("Contact not found"));
+
+			// ✅ FIXED AUTH CHECK
+			if (oldContact.getUser().getId() != user.getId()) {
+				throw new RuntimeException("Unauthorized");
+			}
+
+			contact.setcId(cId);
+			contact.setUser(oldContact.getUser());
+			contact.setDate(oldContact.getDate());
+
+			String fileName = file.isEmpty() ? oldContact.getImage() : handleFileUpload(file);
+			contact.setImage(fileName);
+
+			contactRepository.save(contact);
+
+			redirectAttributes.addFlashAttribute("message",
+					new Message("Updated Successfully ✅", "alert-success"));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message",
+					new Message("Update failed ❌", "alert-danger"));
+		}
+
+		return "redirect:/user/view_contact/0";
+	}
+
+// update contact page
+@GetMapping("/update_contact/{cId}")
+public String updateContact(@PathVariable Integer cId,
+							Model model,
+							Principal principal) {
+
+	Contact contact = contactRepository.findById(cId).get();
+	model.addAttribute("contact", contact);
+
+	return "user/update_contact";
+}
+
+	//changepassword page
 	@GetMapping("/change_password")
-	public String changePassword(Model model, @ModelAttribute User user, Principal principal) {
-		String name = principal.getName();
-
-		System.out.println(name);
+	public String changePassword() {
 		return "user/change_password";
 	}
 
+
+	// ================= CHANGE PASSWORD =================
 	@PostMapping("/change_password")
-	public String changePasswordP(Model model, Principal principal, @RequestParam("oldPassword") String oldPassword,
-			@RequestParam("newPassword") String newPassword, HttpSession session) {
+	public String changePassword(Principal principal,
+								 @RequestParam String oldPassword,
+								 @RequestParam String newPassword,
+								 HttpSession session) {
 
-		String username = principal.getName();
+		User user = getLoggedUser(principal);
 
-		User currentUser = userRepository.findByEmail(username).get();
+		if (passwordEncoder.matches(oldPassword, user.getPassword())) {
 
-		// Old password check (encrypted compare)
-		if (passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
+			user.setPassword(passwordEncoder.encode(newPassword));
+			userRepository.save(user);
 
-			// New password encrypt karke save karo
-			currentUser.setPassword(passwordEncoder.encode(newPassword));
-			userRepository.save(currentUser);
-
-			session.setAttribute("message", "✅ Password changed successfully");
+			session.setAttribute("message", "Password changed ✅");
 
 		} else {
-			session.setAttribute("message", "❌ Wrong old password");
+			session.setAttribute("message", "Wrong old password ❌");
 		}
 
 		return "user/change_password";
 	}
 
+	// ================= COMMON METHODS =================
+	private User getLoggedUser(Principal principal) {
+		return userRepository.findByEmail(principal.getName())
+				.orElseThrow(() -> new RuntimeException("User not found"));
+	}
+
+	private String handleFileUpload(MultipartFile file) throws Exception {
+
+		if (file.isEmpty()) return "default.png";
+
+		String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+		File saveDir = new ClassPathResource("static/images").getFile();
+		Path path = Paths.get(saveDir.getAbsolutePath() + File.separator + fileName);
+
+		Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+		return fileName;
+	}
 }

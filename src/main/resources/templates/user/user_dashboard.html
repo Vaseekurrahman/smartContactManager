@@ -81,7 +81,7 @@
                     <tbody>
                         <tr th:each="c : ${contacts}">
                             <td>
-                                <img src="/img/default.png" width="40" class="rounded-circle">
+                               <!-- <img th:src="@{'/images/' +${c.image}" width="40" class="rounded-circle">-->
                             </td>
                             <td th:text="${c.name}">Rahul</td>
                             <td th:text="${c.email}">rahul@gmail.com</td>

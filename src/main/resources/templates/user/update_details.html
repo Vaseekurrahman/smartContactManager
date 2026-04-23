@@ -13,14 +13,13 @@
                  th:class="'alert text-center ' + ${message.type}">
                 <p th:text="${message.content}"></p>
             </div>
-
             <h1 class="text-center">Update Contact</h1>
             <hr>
 
             <div class="col-sm-8 offset-md-2">
 
                 <!-- ✅ FINAL FORM -->
-                <form th:action="@{'/user/update_details/' + ${contact.cId}}"
+                <form th:action="@{'/user/update_details/' + ${contact.cId}} "
                       method="post"
                       enctype="multipart/form-data">
                     <!-- ✅ Hidden ID -->

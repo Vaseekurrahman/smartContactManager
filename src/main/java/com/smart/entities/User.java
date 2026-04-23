@@ -4,20 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "users")   // ✅ FIXED (important)
 public class User {
 
 	@Id
@@ -37,107 +29,48 @@ public class User {
 	private String imageUrl;
 	private LocalDateTime date;
 
-	public LocalDateTime getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
-
 	@Column(length = 500)
 	private String about;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Contact> contacts = new ArrayList<>();
 
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	// ===== CONSTRUCTOR =====
+	public User() {}
 
-	public int getId() {
-		return id;
-	}
+	// ===== GETTERS SETTERS =====
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 
-	public String getName() {
-		return name;
-	}
+	public String getEmail() { return email; }
+	public void setEmail(String email) { this.email = email; }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	public String getPassword() { return password; }
+	public void setPassword(String password) { this.password = password; }
 
-	public String getEmail() {
-		return email;
-	}
+	public String getRole() { return role; }
+	public void setRole(String role) { this.role = role; }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	public boolean isEnabled() { return enabled; }
+	public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
-	public String getPassword() {
-		return password;
-	}
+	public String getImageUrl() { return imageUrl; }
+	public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	public String getAbout() { return about; }
+	public void setAbout(String about) { this.about = about; }
 
-	public String getRole() {
-		return role;
-	}
+	public List<Contact> getContacts() { return contacts; }
+	public void setContacts(List<Contact> contacts) { this.contacts = contacts; }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public String getAbout() {
-		return about;
-	}
-
-	public void setAbout(String about) {
-		this.about = about;
-	}
-
-	public List<Contact> getContacts() {
-		return contacts;
-	}
-
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
-	}
+	public LocalDateTime getDate() { return date; }
+	public void setDate(LocalDateTime date) { this.date = date; }
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role=" + role
-				+ ", enabled=" + enabled + ", imageUrl=" + imageUrl + ", about=" + about + ", contacts=" + contacts
-				+ "]";
+		return "User [id=" + id + ", name=" + name + ", email=" + email + "]";
 	}
-
-	public User orElseThrow(Object object) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

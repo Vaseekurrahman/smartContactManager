@@ -13,15 +13,20 @@ import com.smart.entities.Contact;
 
 public interface ContactRepository extends JpaRepository<Contact, Integer> {
 
+	// 🔍 Find by email (global)
 	List<Contact> findByEmail(String email);
 
-	@Query("from Contact as c where c.user.id =:userId")
+	// 🔍 Find by email + user (IMPORTANT FIX)
+	List<Contact> findByEmailAndUser(String email, User user);
 
+	// 📄 Pagination (User contacts)
+	@Query("from Contact c where c.user.id = :userId")
+	Page<Contact> findContactsByUser(@Param("userId") int userId, Pageable pageable);
 
-	public Page<Contact> findContactsByUser(@Param("userId") int userId, Pageable pageable);
+	// 🔍 Search by name
+	List<Contact> findByNameContainingAndUser(String name, User user);
 
-	public void deleteById(Integer Id);
+	// 🔢 Count contacts
+	long countByUser(User user);
 
-	//search contact by name
-	public List<Contact> findByNameContainingAndUser(String name, User user);
 }

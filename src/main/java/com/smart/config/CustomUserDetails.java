@@ -1,13 +1,12 @@
 package com.smart.config;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.smart.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.smart.entities.User;
+import java.util.Collection;
+import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -31,8 +30,6 @@ public class CustomUserDetails implements UserDetails {
 	public String getUsername() {
 		return user.getEmail();
 	}
-
-	// ⭐ ye 4 methods missing the
 
 	@Override
 	public boolean isAccountNonExpired() {

@@ -1,26 +1,105 @@
+
+
 <html xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{user/user_base :: layout(~{::section})}">
+      th:replace="~{user/user_base :: layout(~{::section})}">
 
-    <head>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    />
+    <title>Patient View Profile</title>
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    >
+</head>
 
-    <body>
-        <section class="">
-            <div class="card mycard" style="width: 45%;">
-                <div class="card-body ">
-                    <div class="container text-center">
-                        <img src="/images/pngtree-man-avatar-image-for-profile-png-image_13001877.png"
-                             alt="profile" style="height: 100px; width: 100px; border-radius: 50%;"/>
-                        <h3 class="mt-3"><span th:text="${user.name}"></span></h3>
-                        <div> <span class="fs-4 fw-bold"> Email :</span> <span th:text="${user.email}"></span> </div>
-                        <div> <span class="fs-4 fw-bold">Image : </span><span th:text="${user.imageUrl}"></span></div>
-                        <div> <span class="fs-4 fw-bold">Enabled : </span><span th:text="${user.enabled}"></span></div>
-                        <div> <span class="fs-4 fw-bold">Role : </span><span th:utext="${user.role}"></span></div>
-                      
+<body>
+<section>
+
+    <body style="background-color:#f5f5f5;">
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <!-- Profile Card -->
+            <div class="col-md-5">
+
+                <div class="card shadow-lg border-0">
+                    <div class="bg bg-dark text-light" style="border-block: #0a1620; border: 1px solid black"> <h2 class="" style="text-align: center;">profile</h2></div>
+
+                    <div class="card-body text-center">
+                        <img
+                                src="/images/pngtree-man-avatar-image-for-profile-png-image_13001877.png"
+                                class="rounded-circle mb-3"
+                                width="120"
+                                height="120"
+                                alt="Profile Picture"
+                        />
+                        <h3 th:text="${user.name}" class="card-title"></h3>
+                        <p class="text-muted">Role:
+                            <strong th:text="${user.role}">Patient</strong></p>
+                        <hr />
+                        <div class="text-start px-4">
+                            <p>
+                                <span>Email:</span> <span
+                                    class="text-muted"
+                                    th:text="${user.email}"
+                            > Medical@care.in</span>
+                            </p>
+                            <p>
+                                <span>Image:</span> <span
+                                    class="text-muted"
+                                    th:text="${user.imageUrl}"
+                            > 7905498506</span>
+                            </p>
+                            <p><strong>Gender:</strong> Male</p>
+                            <p><strong>Address:</strong> New Delhi,
+                                India</p>
+                            <p><strong>Member Since:</strong>
+                                20-Nov-2025</p>
+                            <p><strong>Status:</strong> <span
+                                 th:text="${user.enabled}"   class="badge bg-success"
+                            >Active</span></p>
+                        </div>
+                        <hr />
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a
+                                            href="#"
+                                            class="btn btn-warning px-4"
+                                    >Edit Profile</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a
+                                            href="change_password"
+                                            class="btn btn-primary px-4"
+                                    >Change Password</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a
+                                    href="/user/user_dashboard"
+                                    class="btn btn-dark w-100"
+                            >Back to Dashboard</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </body>
+        </div>
+    </div>
+    <!-- Bootstrap Script -->
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+</section>
+</body>
 
 </html>

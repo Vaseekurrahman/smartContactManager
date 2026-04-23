@@ -6,53 +6,59 @@
 
     <body>
         <section>
-            <div class=container>
-                <div class="row">
-                    <div class="col-md-6 offset-md-3 mb-4">
-                        <div class="my-card">
-                            <div th:if="${message}" th:class="'alert text-center ' + ${message.type}">
-                                <span th:text="${message.content}"></span>
-                            </div>
-                            <div class=" container text-center">
-                                <img class="" style="width: 80px;" th:src="@{images/regulatory.png}" >
-                            </div>
-                            <h1 class="text-center">Register Here!!</h1>
-                            <form th:action="@{/register}" method="post" th:object="${user}">
-                                <div class="form-group">
-                                    <label>Your Name</label>
-                                    <input type="text"
-                                        th:field="*{name}"
-                                        class="form-control"
-                                        th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
-                                    <div class="invalid-feedback"
-                                        th:if="${#fields.hasErrors('name')}"
-                                        th:errors="*{name}">
+            <section class="inner-hero text-center">
+                <div class="container">
+                    <h1 class="fw-bold mb-2">Create Your Account</h1>
+                    <p class="mb-0">Join SmartContactManager and manage all your contacts effortlessly.</p>
+                </div>
+            </section>
+            <section class="auth-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card glass-card p-4 p-md-5">
+                                <h4 class="fw-bold mb-1">Sign Up</h4>
+                                <div th:if="${message}" th:class="'alert text-center ' + ${message.type}">
+                                    <p th:text="${message.content}"></p>
+                                </div>
+                                <p class="mini-text mb-4">Fill in your details to get started.</p>
+                                <form th:action="@{/register}" method="post" th:object="${user}">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" name="name" class="form-control" id="firstName" placeholder="John" required>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="signupEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" id="signupEmail" placeholder="name@example.com" required>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="signupPassword" class="form-label">Password</label>
+                                            <input type="password" class="form-control" name="password" id="signupPassword" placeholder="Create password" required>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="about" class="form-label">About</label>
+                                            <textarea name="about" class="form-control" id="about" rows="1" placeholder="Tell us about yourself" required></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group mt-2">
-                                    <label>Email</label>
-                                    <input type="email" th:field="*{email}" class="form-control" placeholder="Enter here" />
-                                </div>
-                                <div class="form-group mt-2">
-                                    <label>Password</label>
-                                    <input type="password" th:field="*{password}" class="form-control" placeholder="Enter here" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <textarea th:field="*{about}" rows="5" class="form-control"></textarea>
-                                </div>
-                                <div class="form-check text-center">
-                                    <input type="checkbox" name="agreement" class="form-check-input" />
-                                    <label>Accept terms and condition</label>
-                                </div>
-                                <div class="container mt-2 text-center">
-                                    <button type="submit" class="btn bg-primary text-white">Submit</button>
-                                </div>
-                            </form>
+
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" name="agreement" type="checkbox" id="termsCheck" required>
+                                        <label class="form-check-label mini-text" for="termsCheck">
+                                            I agree to the Terms & Conditions and Privacy Policy
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn page-btn w-100 mt-4">Create Account</button>
+                                </form>
+                                <p class="text-center mini-text mt-4 mb-0">Already registered? <a th:href="@{/login}" class="text-decoration-none">Login here</a></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </section>
     </body>
 

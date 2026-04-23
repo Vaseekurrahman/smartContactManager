@@ -47,3 +47,17 @@ const search = () => {
         console.log("searching...");
     }
 };
+
+/*scripting*/
+document.addEventListener("DOMContentLoaded", () => {
+  const homeSlider = document.querySelector("#homeSlider");
+  if (!homeSlider || !window.bootstrap) {
+    return;
+  }
+
+  new bootstrap.Carousel(homeSlider, {
+    interval: 3500,
+    ride: "carousel",
+    pause: false
+  });
+});
